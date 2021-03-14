@@ -1,28 +1,12 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const { Telegraf } = require("telegraf");
-const axios = require("axios");
-const cheerio = require("cheerio");
-const cron = require("node-cron");
+import express from "express";
+import bodyParser from "body-parser";
+import { Telegraf } from "telegraf";
+import cron from "node-cron";
 
-// This is the t-shirt I'd love to get
-const DESIRED_ITEM =
-  "https://store.alberthammondjr.com/114429/AHJ-Japan-Tee-White-T-Shirt";
+import { stockCheck, DESIRED_ITEM } from "./inventory.js";
 
-// This is a random in stock t-shirt (for test cases)
-const IN_STOCK = "https://store.alberthammondjr.com/112701/Comic-Tee";
-
-// Initialise express and telegram bot
 const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
-
-// Helper functions
-const stockCheck = async (item) => {
-  const page = await axios.get(item);
-  const $ = cheerio.load(page.data);
-  const button = $("button.btn-danger").text().trim().toLowerCase();
-  return button === "out of stock" ? false : true;
-};
 
 /* 
   The messages are written in my native tongue, Turkish
