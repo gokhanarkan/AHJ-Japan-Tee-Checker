@@ -63,7 +63,7 @@ app.get("/", async (req, res) => {
 // Cron job to check stock every 6 hours
 cron.schedule("0 */6 * * *", async function () {
   const inventory = await stockCheck();
-  inventory ? successMessage() : failMessage();
+  if (inventory) successMessage()
 });
 
 bot.launch();
